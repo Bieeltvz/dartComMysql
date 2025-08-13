@@ -1,15 +1,17 @@
-import 'package:mysql_client/mysql_client.dart';
+import 'dart:io';
 
+import 'package:mysql_client/mysql_client.dart';
 
 const String dbhost = 'localhost';
 const int dbport = 3306;
-const String dbUser = 'root';
-const String dbPassword = 'root';
+const String dbUser = 'gabriel';
+const String dbPassword = 'senha';
+
 const String dbDataBaseName = 'biblioteca';
 
 void main() async {
- final conn = await _conectarNoBanco();
- if (conn == null) {
+  final conn = await _conectarNoBanco();
+  if (conn == null) {
     print('Não foi possível estabelecer conexão com o banco de dados.');
     return;
   }
@@ -44,8 +46,9 @@ Future<MySQLConnection?> _conectarNoBanco() async {
       host: dbhost,
       port: dbport,
       userName: dbUser,
-      password: dbPassword,
       databaseName: dbDataBaseName,
+      password: dbPassword,
+      secure: false, //remove restrição de acesso do senai
     );
     await conn.connect();
     return conn;
@@ -55,12 +58,13 @@ Future<MySQLConnection?> _conectarNoBanco() async {
   }
 }
 
- Future<void> _incluirLivro(
+Future<void> _incluirLivro(
   MySQLConnection conn,
   String titulo,
-  String autor,) async {
-    try{
-     var result = await conn.execute(
+  String autor,
+) async {
+  try {
+    var result = await conn.execute(
       'insert into livro (titulo,autor) values (:titulo,:autor)',
       {'titulo': titulo, 'autor': autor},
     );
@@ -68,8 +72,7 @@ Future<MySQLConnection?> _conectarNoBanco() async {
   } catch (erro) {
     print('Inclusão com problema $erro');
   }
-  }
-
+}
 
 Future<void> _listarLivros(MySQLConnection conn) async {
   try {
