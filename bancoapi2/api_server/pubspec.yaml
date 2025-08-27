@@ -10,5 +10,3 @@ mysql_client: any #mantido para acessar o mysql
 shelf: ^1.4.1 #Framework HTTP para Dart
 shelf_router: ^1.1.0 # Para roteamento das URL's
 
-
-
